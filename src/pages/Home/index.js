@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { showlog, shownum } from '../../store/action/show'
+import { shownum } from '../../store/action/show'
 
 export default function Home() {
   const dispatch = useDispatch()
