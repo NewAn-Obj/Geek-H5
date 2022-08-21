@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../../components/Navbar'
 import styles from './index.module.scss'
 import Input from '../../components/Input'
@@ -8,6 +8,7 @@ import * as Yup from 'yup'
 import { getCode } from '../../store/action/login'
 import { Toast } from 'antd-mobile'
 export default function Login() {
+  const [time, setTime] = useState(0)
   const dispatch = useDispatch()
 
   const form = useFormik({
@@ -37,6 +38,9 @@ export default function Login() {
   } = form
 
   const onExtraClick = async () => {
+    if (time > 0) {
+      return
+    }
     if (!/^1[3456789]\d{9}$/.test(mobile)) {
       form.setTouched({
         mobile: true,
@@ -49,6 +53,15 @@ export default function Login() {
       Toast.show({
         content: '获取验证码成功',
       })
+      setTime(5)
+      const timer = setInterval(() => {
+        setTime((time) => {
+          if (time === 1) {
+            clearInterval(timer)
+          }
+          return time - 1
+        })
+      }, 1000)
     } catch (err) {
       // console.dir(err.response.data.message)
       if (err.response) {
@@ -87,7 +100,7 @@ export default function Login() {
           {/* 短信验证码输入框 */}
           <Input
             placeholder="请输入验证码"
-            extra="获取验证码"
+            extra={time === 0 ? '获取验证码' : `${time}秒后获取`}
             onExtraClick={onExtraClick}
             value={code}
             onChange={handleChange}
