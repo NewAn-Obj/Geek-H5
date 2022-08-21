@@ -3,14 +3,16 @@ import Navbar from '../../components/Navbar'
 import styles from './index.module.scss'
 import Input from '../../components/Input'
 import { useFormik } from 'formik'
+import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
+import { getCode } from '../../store/action/login'
+import { Toast } from 'antd-mobile'
 export default function Login() {
-  const getCode = () => {
-    console.log('获取验证码')
-  }
+  const dispatch = useDispatch()
+
   const form = useFormik({
     initialValues: {
-      mobile: '',
+      mobile: '18888888888',
       code: '',
     },
     onSubmit(values) {
@@ -33,6 +35,35 @@ export default function Login() {
     touched,
     errors,
   } = form
+
+  const onExtraClick = async () => {
+    if (!/^1[3456789]\d{9}$/.test(mobile)) {
+      form.setTouched({
+        mobile: true,
+      })
+      return
+    }
+    // console.log('获取验证码')
+    try {
+      await dispatch(getCode(mobile))
+      Toast.show({
+        content: '获取验证码成功',
+      })
+    } catch (err) {
+      // console.dir(err.response.data.message)
+      if (err.response) {
+        Toast.show({
+          content: err.response.data.message,
+          maskClickable: false,
+        })
+      } else {
+        Toast.show({
+          content: '网络繁忙，请稍后重试',
+          maskClickable: false,
+        })
+      }
+    }
+  }
   return (
     <div className={styles.root}>
       <Navbar>登录</Navbar>
@@ -57,7 +88,7 @@ export default function Login() {
           <Input
             placeholder="请输入验证码"
             extra="获取验证码"
-            getCode={() => getCode()}
+            onExtraClick={onExtraClick}
             value={code}
             onChange={handleChange}
             name="code"
