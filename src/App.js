@@ -1,5 +1,30 @@
-import './App.css'
+import React, { Suspense } from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom'
+
+// import Login from './pages/Login'
+// import Home from './pages/Home'
+const Login = React.lazy(() => import('./pages/Login'))
+const Home = React.lazy(() => import('./pages/Home'))
 
 export default function App() {
-  return <div>App跟组件</div>
+  return (
+    <Router>
+      <div className="App">
+        {/* <Link to="/login">登录</Link>
+        <Link to="/home">首页</Link> */}
+        <Suspense fallback={<div>loading...</div>}>
+          <Switch>
+            <Redirect exact from="/" to="/home"></Redirect>
+            <Route path="/login" component={Login}></Route>
+            <Route path="/home" component={Home}></Route>
+          </Switch>
+        </Suspense>
+      </div>
+    </Router>
+  )
 }
