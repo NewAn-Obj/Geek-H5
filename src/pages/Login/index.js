@@ -5,19 +5,25 @@ import Input from '../../components/Input'
 import { useFormik } from 'formik'
 import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
-import { getCode } from '../../store/action/login'
+import { getCode, login } from '../../store/action/login'
 import { Toast } from 'antd-mobile'
+import { useHistory } from 'react-router-dom'
 export default function Login() {
   const [time, setTime] = useState(0)
   const dispatch = useDispatch()
-
+  const history = useHistory()
   const form = useFormik({
     initialValues: {
       mobile: '18888888888',
       code: '',
     },
-    onSubmit(values) {
-      console.log(values)
+    async onSubmit(values) {
+      // console.log(values)
+      await dispatch(login(values))
+      Toast.show({
+        content: '登录成功',
+      })
+      history.push('/home')
     },
     // 表单验证
     validationSchema: Yup.object().shape({
@@ -48,34 +54,19 @@ export default function Login() {
       return
     }
     // console.log('获取验证码')
-    try {
-      await dispatch(getCode(mobile))
-      Toast.show({
-        content: '获取验证码成功',
+    await dispatch(getCode(mobile))
+    Toast.show({
+      content: '获取验证码成功',
+    })
+    setTime(5)
+    const timer = setInterval(() => {
+      setTime((time) => {
+        if (time === 1) {
+          clearInterval(timer)
+        }
+        return time - 1
       })
-      setTime(5)
-      const timer = setInterval(() => {
-        setTime((time) => {
-          if (time === 1) {
-            clearInterval(timer)
-          }
-          return time - 1
-        })
-      }, 1000)
-    } catch (err) {
-      // console.dir(err.response.data.message)
-      if (err.response) {
-        Toast.show({
-          content: err.response.data.message,
-          maskClickable: false,
-        })
-      } else {
-        Toast.show({
-          content: '网络繁忙，请稍后重试',
-          maskClickable: false,
-        })
-      }
-    }
+    }, 1000)
   }
   return (
     <div className={styles.root}>
