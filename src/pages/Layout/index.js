@@ -1,7 +1,18 @@
+import React, { Suspense } from 'react'
+
 import Icon from '../../components/Icon'
 import classnames from 'classnames'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from './index.module.scss'
+import { Switch, Route } from 'react-router-dom'
+// import Video from '../Video'
+// import Profile from '../Profile'
+// import QA from '../QA'
+// import Home from '../Home'
+const Video = React.lazy(() => import('../Video'))
+const Profile = React.lazy(() => import('../Profile'))
+const QA = React.lazy(() => import('../QA'))
+const Home = React.lazy(() => import('../Home'))
 
 // 将 tab 按钮的数据放在一个数组中
 // - id 唯一性ID
@@ -28,7 +39,16 @@ const Layout = () => {
   return (
     <div className={styles.root}>
       {/* 区域一：点击按钮切换显示内容的区域 */}
-      <div className="tab-content"></div>
+      <div className="tab-content">
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route path="/home/index" component={Home}></Route>
+            <Route path="/home/question" component={QA}></Route>
+            <Route path="/home/video" component={Video}></Route>
+            <Route path="/home/profile" component={Profile}></Route>
+          </Switch>
+        </Suspense>
+      </div>
 
       {/* 区域二：按钮区域，会使用固定定位显示在页面底部 */}
       <div className="tabbar">
