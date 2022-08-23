@@ -5,7 +5,7 @@ import Textarea from '../../../../../components/Textarea'
 import Input from '../../../../../components/Input'
 import { useSelector } from 'react-redux'
 
-export default function EditInput({ onClose, type }) {
+export default function EditInput({ onClose, type, onSubmit }) {
   const defaultData = useSelector((state) => state.profile.privateUser[type])
   const [value, setValue] = useState(defaultData || '')
 
@@ -13,7 +13,11 @@ export default function EditInput({ onClose, type }) {
   return (
     <div className={styles.root}>
       <Navbar
-        extra={<span className="commit-btn">提交</span>}
+        extra={
+          <span className="commit-btn" onClick={() => onSubmit(type, value)}>
+            提交
+          </span>
+        }
         onLeftClick={onClose}
       >
         {`编辑${type === 'name' ? '昵称' : '简介'}`}

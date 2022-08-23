@@ -1,9 +1,9 @@
 import Navbar from '../../../components/Navbar'
-import { List, DatePicker, Popup } from 'antd-mobile'
+import { List, DatePicker, Popup, Toast } from 'antd-mobile'
 import styles from './index.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
-import { getUserProfile } from '../../../store/action/profile'
+import { getUserProfile, updataUser } from '../../../store/action/profile'
 import classNames from 'classnames'
 import EditInput from './components/EditInput'
 const ProfileEdit = () => {
@@ -23,6 +23,21 @@ const ProfileEdit = () => {
     dispatch(getUserProfile())
   }, [dispatch])
   const data = useSelector((state) => state.profile.privateUser)
+  const onSubmit = (type, value) => {
+    // console.log(type, value)
+    dispatch(
+      updataUser({
+        [type]: value,
+      })
+    )
+    setVisible1({
+      setVisible1: false,
+      type: '',
+    })
+    Toast.show({
+      content: '修改成功',
+    })
+  }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -124,7 +139,11 @@ const ProfileEdit = () => {
         bodyStyle={{ height: '100vh', width: '100vw ' }}
       >
         {visible1.visible1 && (
-          <EditInput onClose={onClose} type={visible1.type}></EditInput>
+          <EditInput
+            onClose={onClose}
+            type={visible1.type}
+            onSubmit={onSubmit}
+          ></EditInput>
         )}
       </Popup>
     </div>

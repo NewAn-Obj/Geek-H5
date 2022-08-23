@@ -26,14 +26,13 @@ export const getUserProfile = () => {
   return async (dispatch) => {
     const res = await request.get('/user/profile')
     dispatch(saveUserProfile(res.data))
-    console.log(res.data)
+    // console.log(res.data)
   }
 }
 
 export const updataUser = (user) => {
-  return async () => {
-    const res = await request.patch('/user/profile', user)
-    // dispatch(saveUserInfo(res.data))
-    console.log(res)
+  return async (dispatch) => {
+    await request.patch('/user/profile', user)
+    dispatch(getUserProfile())
   }
 }
