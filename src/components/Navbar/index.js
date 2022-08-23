@@ -9,11 +9,15 @@ import styles from './index.module.scss'
 
 2.路由提供了几个与路由相关的hooks，也可以通过hooks实现回到上一页
 */
-function Navbar({ children, extra }) {
+function Navbar({ children, extra, onLeftClick }) {
   const history = useHistory()
   const back = () => {
-    // console.log(history)
-    history.go(-1)
+    if (onLeftClick) {
+      onLeftClick()
+    } else {
+      // console.log(history)
+      history.go(-1)
+    }
   }
   return (
     <div className={styles.root}>

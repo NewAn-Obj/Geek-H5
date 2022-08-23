@@ -1,18 +1,27 @@
 import Navbar from '../../../components/Navbar'
-import { List, Space } from 'antd-mobile'
+import { List, DatePicker, Popup } from 'antd-mobile'
 import styles from './index.module.scss'
-import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getUserProfile } from '../../../store/action/profile'
 import classNames from 'classnames'
-
+import EditInput from './components/EditInput'
 const ProfileEdit = () => {
+  const [visible, setVisible] = useState(false)
+  const [visible1, setVisible1] = useState({
+    visible1: false,
+    type: '',
+  })
+  const onClose = () => {
+    setVisible1({
+      visible1: false,
+      type: '',
+    })
+  }
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getUserProfile())
   }, [dispatch])
-  const history = useHistory()
   const data = useSelector((state) => state.profile.privateUser)
   return (
     <div className={styles.root}>
@@ -24,6 +33,7 @@ const ProfileEdit = () => {
           {/* 列表一：显示头像、昵称、简介 */}
           <List className="profile-list">
             <List.Item
+              clickable
               extra={
                 <span className="avatar-wrapper">
                   <img src={data.photo} alt="" style={{ height: 40 }} />
@@ -33,14 +43,32 @@ const ProfileEdit = () => {
               头像
             </List.Item>
 
-            <List.Item extra={data.name}>昵称</List.Item>
+            <List.Item
+              clickable
+              extra={data.name}
+              onClick={() =>
+                setVisible1({
+                  visible1: true,
+                  type: 'name',
+                })
+              }
+            >
+              昵称
+            </List.Item>
 
             <List.Item
+              onClick={() =>
+                setVisible1({
+                  visible1: true,
+                  type: 'intro',
+                })
+              }
+              clickable
               extra={
                 <span
-                  className={classNames('intro', data.intro ? 'normal' : '')}
+                  className={classNames('intro', data.intro ? 'normal' : ' ')}
                 >
-                  {data.intro}
+                  {data.intro ? data.intro : ''}
                 </span>
               }
             >
@@ -50,8 +78,32 @@ const ProfileEdit = () => {
 
           {/* 列表二：显示性别、生日 */}
           <List className="profile-list">
-            <List.Item extra={data.gender === 0 ? '男' : '女'}>性别</List.Item>
-            <List.Item extra={data.birthday}>生日</List.Item>
+            <List.Item clickable extra={data.gender === 0 ? '男' : '女'}>
+              性别
+            </List.Item>
+            <List.Item
+              clickable
+              onClick={() => {
+                setVisible(true)
+              }}
+              // extra={data.birthday}
+            >
+              生日
+            </List.Item>
+            <DatePicker
+              visible={visible}
+              onClose={() => {
+                setVisible(false)
+              }}
+              max={new Date()}
+              min={new Date('1900/01/01')}
+              defaultValue={new Date(data.birthday)}
+              onConfirm={() => {}}
+            >
+              {(val) => {
+                // console.log(val)
+              }}
+            </DatePicker>
           </List>
 
           {/* 文件选择框，用于头像图片的上传 */}
@@ -60,21 +112,19 @@ const ProfileEdit = () => {
 
         {/* 底部栏：退出登录按钮 */}
         <div className="logout">
-          {/* <Link to="/profile/edit"> */}
-          <button
-            className="btn"
-            onClick={() => {
-              history.push('/profile/editing')
-            }}
-          >
-            修改资料
-          </button>
-          {/* </Link> */}
-
-          <Space></Space>
           <button className="btn">退出登录</button>
         </div>
       </div>
+      <Popup
+        visible={visible1.visible1}
+        position="right"
+        onMaskClick={() => {
+          setVisible1(false)
+        }}
+        bodyStyle={{ height: '100vh', width: '100vw ' }}
+      >
+        <EditInput onClose={onClose} type={visible1.type}></EditInput>
+      </Popup>
     </div>
   )
 }
