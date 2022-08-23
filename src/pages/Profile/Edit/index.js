@@ -123,7 +123,9 @@ const ProfileEdit = () => {
         }}
         bodyStyle={{ height: '100vh', width: '100vw ' }}
       >
-        <EditInput onClose={onClose} type={visible1.type}></EditInput>
+        {visible1.visible1 && (
+          <EditInput onClose={onClose} type={visible1.type}></EditInput>
+        )}
       </Popup>
     </div>
   )

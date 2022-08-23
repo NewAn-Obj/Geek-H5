@@ -3,9 +3,11 @@ import styles from './index.module.scss'
 import Navbar from '../../../../../components/Navbar'
 import Textarea from '../../../../../components/Textarea'
 import Input from '../../../../../components/Input'
+import { useSelector } from 'react-redux'
 
 export default function EditInput({ onClose, type }) {
-  const [value, setValue] = useState('hello')
+  const defaultData = useSelector((state) => state.profile.privateUser[type])
+  const [value, setValue] = useState(defaultData || '')
 
   //   console.log(type)
   return (
@@ -19,7 +21,12 @@ export default function EditInput({ onClose, type }) {
       <div className="content">
         <h3>{type === 'name' ? '昵称' : '简介'}</h3>
         {type === 'name' ? (
-          <Input className="input-wrap" placeholder="请输入昵称"></Input>
+          <Input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            className="input-wrap"
+            placeholder="请输入昵称"
+          ></Input>
         ) : (
           <Textarea
             maxlength={100}
