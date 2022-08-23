@@ -7,11 +7,33 @@ const saveUserInfo = (data) => {
     payload: data,
   }
 }
+const saveUserProfile = (data) => {
+  return {
+    type: 'profile/profile',
+
+    payload: data,
+  }
+}
 
 export const getUserInfo = () => {
   return async (dispatch) => {
     const res = await request.get('/user')
     dispatch(saveUserInfo(res.data))
     // console.log(res.data)
+  }
+}
+export const getUserProfile = () => {
+  return async (dispatch) => {
+    const res = await request.get('/user/profile')
+    dispatch(saveUserProfile(res.data))
+    console.log(res.data)
+  }
+}
+
+export const updataUser = (user) => {
+  return async () => {
+    const res = await request.patch('/user/profile', user)
+    // dispatch(saveUserInfo(res.data))
+    console.log(res)
   }
 }

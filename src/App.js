@@ -10,6 +10,8 @@ import {
 // import Home from './pages/Home'
 const Login = React.lazy(() => import('./pages/Login'))
 const Layout = React.lazy(() => import('./pages/Layout'))
+const ProfileEdit = React.lazy(() => import('./pages/Profile/Edit/index'))
+const EditInfo = React.lazy(() => import('./pages/Profile/EditInfo'))
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
             <Redirect exact from="/" to="/home"></Redirect>
             <Route path="/login" component={Login}></Route>
             <Route path="/home" component={Layout}></Route>
+            <Route path="/profile/edit" component={ProfileEdit}></Route>
+            <Route path="/profile/editing" component={EditInfo}></Route>
           </Switch>
         </Suspense>
       </div>

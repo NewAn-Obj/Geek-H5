@@ -14,8 +14,8 @@ export default function Login() {
   const history = useHistory()
   const form = useFormik({
     initialValues: {
-      mobile: '18888888888',
-      code: '',
+      mobile: '13911111111',
+      code: '246810',
     },
     async onSubmit(values) {
       // console.log(values)

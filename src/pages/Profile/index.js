@@ -10,6 +10,7 @@ const Profile = () => {
   useEffect(() => {
     dispatch(getUserInfo())
   }, [dispatch])
+
   const user = useSelector((state) => state.profile.user)
   // console.log(user)
   const { art_count, fans_count, follow_count, like_count, name, photo } = user

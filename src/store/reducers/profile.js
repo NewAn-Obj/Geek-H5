@@ -16,6 +16,11 @@ export const profile = (state = initialState, action) => {
         ...state,
         user: { ...payload },
       }
+    case 'profile/profile':
+      return {
+        ...state,
+        privateUser: { ...payload },
+      }
 
     // 默认
     default:
