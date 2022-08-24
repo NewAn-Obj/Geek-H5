@@ -30,6 +30,7 @@ export default function EditInput({ onClose, type, onSubmit }) {
             onChange={(e) => setValue(e.target.value)}
             className="input-wrap"
             placeholder="请输入昵称"
+            autoFocus
           ></Input>
         ) : (
           <Textarea

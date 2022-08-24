@@ -4,17 +4,26 @@ import styles from './index.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { getUserProfile, updataUser } from '../../../store/action/profile'
-import classNames from 'classnames'
+// import classNames from 'classnames'
 import EditInput from './components/EditInput'
+import EditList from './components/EditList'
 const ProfileEdit = () => {
   const [visible, setVisible] = useState(false)
   const [visible1, setVisible1] = useState({
     visible1: false,
     type: '',
   })
+  const [visible2, setVisible2] = useState({
+    visible2: false,
+    type: '',
+  })
   const onClose = () => {
     setVisible1({
       visible1: false,
+      type: '',
+    })
+    setVisible2({
+      visible2: false,
       type: '',
     })
   }
@@ -23,9 +32,10 @@ const ProfileEdit = () => {
     dispatch(getUserProfile())
   }, [dispatch])
   const data = useSelector((state) => state.profile.privateUser)
-  const onSubmit = (type, value) => {
+  const onSubmit = async (type, value) => {
     // console.log(type, value)
-    dispatch(
+    //成功发送请求，在跳转到个人中心，未成功发送请求则中断
+    await dispatch(
       updataUser({
         [type]: value,
       })
@@ -38,6 +48,36 @@ const ProfileEdit = () => {
       content: '修改成功',
     })
   }
+  const configList =
+    visible2.type === 'photo'
+      ? [
+          {
+            title: '拍照',
+            onClick: () => {
+              console.log('拍照')
+            },
+          },
+          {
+            title: '本地选择',
+            onClick: () => {
+              console.log('本地选择')
+            },
+          },
+        ]
+      : [
+          {
+            title: '男',
+            onClick: () => {
+              console.log('男')
+            },
+          },
+          {
+            title: '女',
+            onClick: () => {
+              console.log('女')
+            },
+          },
+        ]
   return (
     <div className={styles.root}>
       <div className="content">
@@ -48,6 +88,12 @@ const ProfileEdit = () => {
           {/* 列表一：显示头像、昵称、简介 */}
           <List className="profile-list">
             <List.Item
+              onClick={() =>
+                setVisible2({
+                  visible: true,
+                  type: 'photo',
+                })
+              }
               clickable
               extra={
                 <span className="avatar-wrapper">
@@ -81,7 +127,8 @@ const ProfileEdit = () => {
               clickable
               extra={
                 <span
-                  className={classNames('intro', data.intro ? 'normal' : ' ')}
+                // className={classNames('intro', data.intro ? 'normal' : ' ')}
+                // className={classNames('intro', 'normal')}
                 >
                   {data.intro ? data.intro : ''}
                 </span>
@@ -93,7 +140,16 @@ const ProfileEdit = () => {
 
           {/* 列表二：显示性别、生日 */}
           <List className="profile-list">
-            <List.Item clickable extra={data.gender === 0 ? '男' : '女'}>
+            <List.Item
+              onClick={() =>
+                setVisible2({
+                  visible: true,
+                  type: 'gender',
+                })
+              }
+              clickable
+              extra={data.gender === 0 ? '男' : '女'}
+            >
               性别
             </List.Item>
             <List.Item
@@ -144,6 +200,25 @@ const ProfileEdit = () => {
             type={visible1.type}
             onSubmit={onSubmit}
           ></EditInput>
+        )}
+      </Popup>
+      <Popup
+        visible={visible2.visible}
+        position="bottom"
+        bodyStyle={{ width: '100vw ' }}
+        onMaskClick={() => {
+          setVisible2({
+            visible: false,
+            type: '',
+          })
+        }}
+      >
+        {visible2.visible && (
+          <EditList
+            type={visible2.type}
+            configList={configList}
+            onClose={onClose}
+          ></EditList>
         )}
       </Popup>
     </div>
