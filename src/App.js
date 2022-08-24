@@ -1,10 +1,6 @@
 import React, { Suspense } from 'react'
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from 'react-router-dom'
+import { Router, Route, Switch, Redirect } from 'react-router-dom'
+import history from './utils/history'
 import AuthRoute from './components/AuthRoute'
 // import Login from './pages/Login'
 // import Home from './pages/Home'
@@ -15,7 +11,7 @@ const Chat = React.lazy(() => import('./pages/Profile/Chat/index'))
 
 export default function App() {
   return (
-    <Router>
+    <Router history={history}>
       <div className="App">
         {/* <Link to="/login">登录</Link>
         <Link to="/home">首页</Link> */}
