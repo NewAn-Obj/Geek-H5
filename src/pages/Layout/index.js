@@ -5,6 +5,7 @@ import classnames from 'classnames'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from './index.module.scss'
 import { Switch, Route } from 'react-router-dom'
+import AuthRoute from '../Profile/Edit/components/AuthRoute'
 // import Video from '../Video'
 // import Profile from '../Profile'
 // import QA from '../QA'
@@ -45,7 +46,7 @@ const Layout = () => {
             <Route path="/home/index" component={Home}></Route>
             <Route path="/home/question" component={QA}></Route>
             <Route path="/home/video" component={Video}></Route>
-            <Route path="/home/profile" component={Profile}></Route>
+            <AuthRoute path="/home/profile" component={Profile}></AuthRoute>
           </Switch>
         </Suspense>
       </div>

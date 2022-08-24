@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
-
+import AuthRoute from './pages/Profile/Edit/components/AuthRoute'
 // import Login from './pages/Login'
 // import Home from './pages/Home'
 const Login = React.lazy(() => import('./pages/Login'))
@@ -24,8 +24,8 @@ export default function App() {
             <Redirect exact from="/" to="/home"></Redirect>
             <Route path="/login" component={Login}></Route>
             <Route path="/home" component={Layout}></Route>
-            <Route path="/profile/edit" component={ProfileEdit}></Route>
-            <Route path="/profile/chat" component={Chat}></Route>
+            <AuthRoute path="/profile/edit" component={ProfileEdit}></AuthRoute>
+            <AuthRoute path="/profile/chat" component={Chat}></AuthRoute>
           </Switch>
         </Suspense>
       </div>

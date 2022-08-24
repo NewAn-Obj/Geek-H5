@@ -1,14 +1,34 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import Icon from '../../../components/Icon'
 import Input from '../../../components/Input'
 import Navbar from '../../../components/Navbar'
 // import { useHistory } from 'react-router-dom'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux'
+import io from 'socket.io-client'
+import { getToken } from '../../../utils/storeage'
+import { Toast } from 'antd-mobile'
 
 const Chat = () => {
+  useEffect(() => {
+    const client = io('http://geek.itheima.net', {
+      query: {
+        token: getToken().token,
+      },
+      transports: ['websoket'],
+    })
+    client.on('connect', () => {
+      console.log('连接服务器成功')
+      Toast.show({
+        content: '连接服务器成功，开始聊天吧！',
+      })
+    })
+    return () => {
+      client.close()
+    }
+  }, [])
   //   const history = useHistory()
-  const [chatList, setChatList] = useState([
+  const chatList = [
     {
       type: 'robot',
       text: '亲爱的同学你好，小智为你服务',
@@ -17,9 +37,9 @@ const Chat = () => {
       type: 'user',
       text: '你好！',
     },
-  ])
+  ]
   const photo = useSelector((state) => state.profile.user.photo)
-  console.log(photo)
+  // console.log(photo)
   return (
     <div className={styles.root}>
       {/* 顶部导航栏 */}
