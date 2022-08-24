@@ -1,5 +1,5 @@
 import Navbar from '../../../components/Navbar'
-import { List, DatePicker, Popup, Toast } from 'antd-mobile'
+import { List, DatePicker, Popup, Toast, Button, Dialog } from 'antd-mobile'
 import styles from './index.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useRef, useState } from 'react'
@@ -116,13 +116,13 @@ const ProfileEdit = () => {
       content: '修改成功',
     })
   }
-  const handleLogout = async () => {
-    await dispatch(logout())
-    history.replace('/login')
-    Toast.show({
-      content: '退出成功',
-    })
-  }
+  // const handleLogout = async () => {
+  //   await dispatch(logout())
+  //   history.replace('/login')
+  //   Toast.show({
+  //     content: '退出成功',
+  //   })
+  // }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -243,9 +243,33 @@ const ProfileEdit = () => {
 
         {/* 底部栏：退出登录按钮 */}
         <div className="logout">
-          <button className="btn" onClick={handleLogout}>
+          {/* <button className="btn" onClick={handleLogout}>
             退出登录
-          </button>
+          </button> */}
+          <Button
+            className="btn"
+            block
+            onClick={() => {
+              Dialog.confirm({
+                content: '是否确认退出',
+                onConfirm: async () => {
+                  // await sleep(3000)
+                  // Toast.show({
+                  //   icon: 'success',
+                  //   content: '提交成功',
+                  //   position: 'bottom',
+                  // })
+                  await dispatch(logout())
+                  history.replace('/login')
+                  Toast.show({
+                    content: '退出成功',
+                  })
+                },
+              })
+            }}
+          >
+            退出登录
+          </Button>
         </div>
       </div>
       <Popup
