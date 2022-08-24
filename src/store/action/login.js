@@ -1,5 +1,5 @@
 import request from '../../utils/request'
-import { setToken } from '../../utils/storeage'
+import { removeToken, setToken } from '../../utils/storeage'
 
 /**
  * 获取验证码
@@ -30,5 +30,16 @@ const saveToken = (payload) => {
   return {
     type: 'login/token',
     payload,
+  }
+}
+const delToken = () => {
+  return {
+    type: 'login/logout',
+  }
+}
+export const logout = () => {
+  return (dispatch) => {
+    removeToken()
+    dispatch(delToken())
   }
 }

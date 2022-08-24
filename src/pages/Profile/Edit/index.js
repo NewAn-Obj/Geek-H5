@@ -12,7 +12,10 @@ import {
 import EditInput from './components/EditInput'
 import EditList from './components/EditList'
 import dayjs from 'dayjs'
+import { logout } from '../../../store/action/login'
+import { useHistory } from 'react-router-dom'
 const ProfileEdit = () => {
+  const history = useHistory()
   const fileRef = useRef()
   const [visible, setVisible] = useState(false)
   const [visible1, setVisible1] = useState({
@@ -111,6 +114,13 @@ const ProfileEdit = () => {
     })
     Toast.show({
       content: '修改成功',
+    })
+  }
+  const handleLogout = async () => {
+    await dispatch(logout())
+    history.replace('/login')
+    Toast.show({
+      content: '退出成功',
     })
   }
   return (
@@ -233,7 +243,9 @@ const ProfileEdit = () => {
 
         {/* 底部栏：退出登录按钮 */}
         <div className="logout">
-          <button className="btn">退出登录</button>
+          <button className="btn" onClick={handleLogout}>
+            退出登录
+          </button>
         </div>
       </div>
       <Popup
