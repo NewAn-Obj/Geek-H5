@@ -36,3 +36,9 @@ export const updataUser = (user) => {
     dispatch(getUserProfile())
   }
 }
+export const updataPhoto = (fd) => {
+  return async (dispatch) => {
+    await request.patch('/user/photo', fd)
+    dispatch(getUserProfile())
+  }
+}

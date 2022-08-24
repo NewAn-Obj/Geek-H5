@@ -2,12 +2,17 @@ import Navbar from '../../../components/Navbar'
 import { List, DatePicker, Popup, Toast } from 'antd-mobile'
 import styles from './index.module.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
-import { getUserProfile, updataUser } from '../../../store/action/profile'
+import { useEffect, useRef, useState } from 'react'
+import {
+  getUserProfile,
+  updataPhoto,
+  updataUser,
+} from '../../../store/action/profile'
 // import classNames from 'classnames'
 import EditInput from './components/EditInput'
 import EditList from './components/EditList'
 const ProfileEdit = () => {
+  const fileRef = useRef()
   const [visible, setVisible] = useState(false)
   const [visible1, setVisible1] = useState({
     visible1: false,
@@ -35,6 +40,7 @@ const ProfileEdit = () => {
   const onSubmit = async (type, value) => {
     // console.log(type, value)
     //成功发送请求，在跳转到个人中心，未成功发送请求则中断
+
     await dispatch(
       updataUser({
         [type]: value,
@@ -42,6 +48,10 @@ const ProfileEdit = () => {
     )
     setVisible1({
       setVisible1: false,
+      type: '',
+    })
+    setVisible2({
+      setVisible2: false,
       type: '',
     })
     Toast.show({
@@ -54,13 +64,21 @@ const ProfileEdit = () => {
           {
             title: '拍照',
             onClick: () => {
-              console.log('拍照')
+              // console.log('拍照')
+              Toast.show({
+                content: '此设备不支持拍照',
+              })
+              setVisible2({
+                setVisible2: false,
+                type: '',
+              })
             },
           },
           {
             title: '本地选择',
             onClick: () => {
-              console.log('本地选择')
+              // console.log('本地选择')
+              fileRef.current.click()
             },
           },
         ]
@@ -68,16 +86,32 @@ const ProfileEdit = () => {
           {
             title: '男',
             onClick: () => {
-              console.log('男')
+              // console.log('男', visible2.type)
+              onSubmit('gender', 0)
             },
           },
           {
             title: '女',
             onClick: () => {
-              console.log('女')
+              // console.log('女', visible2.type)
+              onSubmit('gender', 1)
             },
           },
         ]
+  const photoChange = async (e) => {
+    const photo = e.target.files[0]
+    // console.log(photo)
+    const fd = new FormData()
+    fd.append('photo', photo)
+    await dispatch(updataPhoto(fd))
+    setVisible2({
+      setVisible2: false,
+      type: '',
+    })
+    Toast.show({
+      content: '修改成功',
+    })
+  }
   return (
     <div className={styles.root}>
       <div className="content">
@@ -90,7 +124,7 @@ const ProfileEdit = () => {
             <List.Item
               onClick={() =>
                 setVisible2({
-                  visible: true,
+                  visible2: true,
                   type: 'photo',
                 })
               }
@@ -143,7 +177,7 @@ const ProfileEdit = () => {
             <List.Item
               onClick={() =>
                 setVisible2({
-                  visible: true,
+                  visible2: true,
                   type: 'gender',
                 })
               }
@@ -178,7 +212,13 @@ const ProfileEdit = () => {
           </List>
 
           {/* 文件选择框，用于头像图片的上传 */}
-          <input type="file" hidden style={{ display: 'none' }} />
+          <input
+            type="file"
+            hidden
+            style={{ display: 'none' }}
+            ref={fileRef}
+            onChange={photoChange}
+          />
         </div>
 
         {/* 底部栏：退出登录按钮 */}
@@ -203,9 +243,11 @@ const ProfileEdit = () => {
         )}
       </Popup>
       <Popup
-        visible={visible2.visible}
+        visible={visible2.visible2}
         position="bottom"
-        bodyStyle={{ width: '100vw ' }}
+        bodyStyle={{
+          width: '100vw ',
+        }}
         onMaskClick={() => {
           setVisible2({
             visible: false,
@@ -213,7 +255,7 @@ const ProfileEdit = () => {
           })
         }}
       >
-        {visible2.visible && (
+        {visible2.visible2 && (
           <EditList
             type={visible2.type}
             configList={configList}

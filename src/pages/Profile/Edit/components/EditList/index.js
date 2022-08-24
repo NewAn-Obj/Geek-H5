@@ -2,7 +2,7 @@ import React from 'react'
 import { List } from 'antd-mobile'
 import styles from './index.module.scss'
 export default function EditList({ type, configList, onClose }) {
-  console.log(type)
+  //   console.log(type)
   return (
     <div className={styles.root}>
       <List>
