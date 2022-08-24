@@ -1,7 +1,8 @@
-import React from 'react'
+// import react from 'react'
 import { useHistory } from 'react-router-dom'
 import Icon from '../../components/Icon'
 import styles from './index.module.scss'
+import classNames from 'classnames'
 // import { withRouter } from 'react-router-dom'
 /*
 1. 由于Navbar是自定义组件，不是路由组件，所以没有Router的location，history，match三个属性
@@ -9,7 +10,7 @@ import styles from './index.module.scss'
 
 2.路由提供了几个与路由相关的hooks，也可以通过hooks实现回到上一页
 */
-function Navbar({ children, extra, onLeftClick }) {
+function Navbar({ children, extra, onLeftClick, className }) {
   const history = useHistory()
   const back = () => {
     if (onLeftClick) {
@@ -20,7 +21,7 @@ function Navbar({ children, extra, onLeftClick }) {
     }
   }
   return (
-    <div className={styles.root}>
+    <div className={classNames(styles.root, className)}>
       {/* 后退按钮 */}
       <div className="left">
         <Icon type="iconfanhui" onClick={back} />
