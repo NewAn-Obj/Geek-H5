@@ -5,7 +5,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
-import AuthRoute from './pages/Profile/Edit/components/AuthRoute'
+import AuthRoute from './components/AuthRoute'
 // import Login from './pages/Login'
 // import Home from './pages/Home'
 const Login = React.lazy(() => import('./pages/Login'))

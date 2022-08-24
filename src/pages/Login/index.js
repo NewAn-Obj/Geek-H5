@@ -7,8 +7,12 @@ import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
 import { getCode, login } from '../../store/action/login'
 import { Toast } from 'antd-mobile'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 export default function Login() {
+  //from是一个对象，如果是用户首次进入并且登陆，则from为undefined
+  const from = useLocation().state
+  const pathName = from ? from.from : '/home'
+  // console.log(pathName)
   const [time, setTime] = useState(0)
   const dispatch = useDispatch()
   const history = useHistory()
@@ -23,7 +27,7 @@ export default function Login() {
       Toast.show({
         content: '登录成功',
       })
-      history.push('/home')
+      history.replace(pathName)
     },
     // 表单验证
     validationSchema: Yup.object().shape({
