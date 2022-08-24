@@ -11,6 +11,7 @@ import {
 // import classNames from 'classnames'
 import EditInput from './components/EditInput'
 import EditList from './components/EditList'
+import dayjs from 'dayjs'
 const ProfileEdit = () => {
   const fileRef = useRef()
   const [visible, setVisible] = useState(false)
@@ -191,24 +192,33 @@ const ProfileEdit = () => {
               onClick={() => {
                 setVisible(true)
               }}
-              // extra={data.birthday}
+              extra={data.birthday}
             >
               生日
             </List.Item>
-            <DatePicker
-              visible={visible}
-              onClose={() => {
-                setVisible(false)
-              }}
-              max={new Date()}
-              min={new Date('1900/01/01')}
-              defaultValue={new Date(data.birthday)}
-              onConfirm={() => {}}
-            >
-              {(val) => {
-                // console.log(val)
-              }}
-            </DatePicker>
+            {visible && (
+              <DatePicker
+                visible={visible}
+                onClose={() => {
+                  setVisible(false)
+                }}
+                max={new Date()}
+                min={new Date('1900-01-01')}
+                defaultValue={new Date(data.birthday)}
+                onConfirm={async (value) => {
+                  // console.log(value)
+                  console.log(dayjs(value).format('YYYY-MM-DD'))
+                  await dispatch(
+                    updataUser({
+                      birthday: dayjs(value).format('YYYY-MM-DD'),
+                    })
+                  )
+                  Toast.show({
+                    content: '修改成功',
+                  })
+                }}
+              ></DatePicker>
+            )}
           </List>
 
           {/* 文件选择框，用于头像图片的上传 */}
