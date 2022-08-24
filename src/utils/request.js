@@ -1,7 +1,9 @@
 import axios from 'axios'
 import { Toast } from 'antd-mobile'
-import { getToken } from './storeage'
+import { getToken, setToken } from './storeage'
 import history from './history'
+import store from '../store'
+import { saveToken } from '../store/action/login'
 
 const instance = axios.create({
   timeout: 5000,
@@ -27,7 +29,7 @@ instance.interceptors.response.use(
     // 对响应数据做点什么
     return response.data
   },
-  function (error) {
+  async function (error) {
     //如果是网络原因，没有response，则提示网络繁忙
     if (!error.response) {
       Toast.show({
@@ -58,7 +60,34 @@ instance.interceptors.response.use(
       })
       return Promise.reject(error)
     }
-    // 对响应错误做点什么
+    //2.是401错误 且有刷新token
+    // 尝试发请求。获取新的token，但是由于instance 是我们自己封装的，有请求拦截器，所以获取新的token只能用原生axios
+    try {
+      const res = await axios({
+        method: 'put',
+        url: 'http://geek.itheima.net/v1_0/authorizations',
+        headers: {
+          Authorization: `Bearer ${refresh_token}`,
+        },
+      })
+      //获取新的token
+      //保存token，但是我们拿回来的data里面只有token，而没有refresh_token，所以，保存token时要携带refresh_token，否则refresh_token将被覆盖为空值
+      const newToken = {
+        refresh_token,
+        token: res.data.data.token,
+      }
+      //保存token到redux
+      store.dispatch(saveToken(newToken))
+      //保存token到LocalStoreage
+      setToken(newToken)
+      // console.log(res, 'res')
+      //token保存后，重新发请求，获取数据（否则客户需要手动刷新页面能拿到数据
+      //erorr.config里面有我们第一次发请求的所有所需配置
+      return instance(error.config)
+    } catch (err) {
+      //获取新的token失败
+      console.log(err, 'err')
+    }
     return Promise.reject(error)
   }
 )

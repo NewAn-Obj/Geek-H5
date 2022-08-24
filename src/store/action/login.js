@@ -26,7 +26,7 @@ export const login = (data) => {
   }
 }
 
-const saveToken = (payload) => {
+export const saveToken = (payload) => {
   return {
     type: 'login/token',
     payload,
