@@ -3,7 +3,7 @@ import { Toast } from 'antd-mobile'
 import { getToken, setToken } from './storeage'
 import history from './history'
 import store from '../store'
-import { saveToken } from '../store/action/login'
+import { logout, saveToken } from '../store/action/login'
 
 const instance = axios.create({
   timeout: 5000,
@@ -80,15 +80,26 @@ instance.interceptors.response.use(
       store.dispatch(saveToken(newToken))
       //保存token到LocalStoreage
       setToken(newToken)
-      // console.log(res, 'res')
+      console.log(newToken)
+      console.log(getToken())
       //token保存后，重新发请求，获取数据（否则客户需要手动刷新页面能拿到数据
       //erorr.config里面有我们第一次发请求的所有所需配置
       return instance(error.config)
     } catch (err) {
-      //获取新的token失败
-      console.log(err, 'err')
+      //获取新的token失败，refresh_token过期
+      // console.log(err, 'err')
+      store.dispatch(logout())
+      history.push({
+        pathname: '/login',
+        state: {
+          from: history.location.pathname,
+        },
+      })
+      Toast.show({
+        content: '身份过期，请重新登录',
+      })
+      return Promise.reject(error)
     }
-    return Promise.reject(error)
   }
 )
 

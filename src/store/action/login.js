@@ -37,6 +37,8 @@ const delToken = () => {
     type: 'login/logout',
   }
 }
+
+//退出之前，删除token
 export const logout = () => {
   return (dispatch) => {
     removeToken()
