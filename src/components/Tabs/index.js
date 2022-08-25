@@ -67,7 +67,7 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
               <div
                 className={classnames('tab', i === activeIndex ? 'active' : '')}
                 key={i}
-                onClick={() => changeTab(i)}
+                onClick={() => changeTab(item.id)}
               >
                 <span>{item.name}</span>
               </div>

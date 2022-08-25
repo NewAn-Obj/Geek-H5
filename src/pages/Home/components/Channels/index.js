@@ -1,6 +1,7 @@
 import Icon from '../../../../components/Icon'
 import styles from './index.module.scss'
 import { useSelector } from 'react-redux'
+import classNames from 'classnames'
 
 /**
  * 频道管理组件
@@ -8,8 +9,9 @@ import { useSelector } from 'react-redux'
  * @param {Function} props.onClose 关闭频道管理抽屉时的回调函数
  * @param {Function} props.onChannelClick 当点击频道列表中的某个频道时的会带哦函数
  */
-const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
+const Channels = ({ index, onClose, onChange }) => {
   const { userChannels, allChannels } = useSelector((state) => state.home)
+  // console.log(index)
   //recommendChannels是所有频道中过滤用户所选频道的剩余频道
   //过滤方法一
   // const recommendChannels = allChannels.filter((item) => {
@@ -23,8 +25,11 @@ const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
   const recommendChannels = allChannels.filter((item) => {
     return !userChannelsId.includes(item.id)
   })
-  console.log(recommendChannels)
-
+  // console.log(recommendChannels)
+  const handleClick = (i) => {
+    onChange(i)
+    onClose()
+  }
   return (
     <div className={styles.root}>
       {/* 顶部栏：带关闭按钮 */}
@@ -43,9 +48,16 @@ const Channels = ({ tabActiveIndex, onClose, onChannelClick }) => {
           </div>
 
           <div className="channel-list">
-            {userChannels.map((item) => {
+            {userChannels.map((item, i) => {
               return (
-                <span key={item.id} className="channel-list-item">
+                <span
+                  key={item.id}
+                  className={classNames(
+                    'channel-list-item',
+                    index === i ? 'selected' : ''
+                  )}
+                  onClick={() => handleClick(i)}
+                >
                   {item.name}
                   <Icon type="iconbtn_tag_close" />
                 </span>

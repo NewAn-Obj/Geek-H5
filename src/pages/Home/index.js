@@ -14,17 +14,21 @@ export default function Home() {
   }, [dispatch])
   const tabs = useSelector((state) => state.home.userChannels)
   // console.log(tabs)
-  const [tabActiveIndex, setTabActiveIndex] = useState(0)
   const [visible, setVisible] = useState(false)
   const onClose = () => {
     setVisible(false)
   }
+  const onChannelClick = (i) => {
+    setActiveID(i)
+  }
+  //控制选中的频道高亮
+  const [activeID, setActiveID] = useState(0)
   return (
     <div className={styles.root}>
       <Tabs
         tabs={tabs}
-        index={tabActiveIndex}
-        onChange={(index) => setTabActiveIndex(index)}
+        index={activeID}
+        onChange={(index) => setActiveID(index)}
       ></Tabs>
       <div className="tabs-opration">
         <Icon type="iconbtn_search"></Icon>
@@ -39,7 +43,11 @@ export default function Home() {
           position="left"
           bodyStyle={{ width: '100vw' }}
         >
-          <Channels onClose={onClose}></Channels>
+          <Channels
+            onClose={onClose}
+            index={activeID}
+            onChange={(i) => onChannelClick(i)}
+          ></Channels>
         </Popup>
       )}
     </div>
