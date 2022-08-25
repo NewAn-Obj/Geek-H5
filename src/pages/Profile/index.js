@@ -81,7 +81,7 @@ const Profile = () => {
         <div className="service-list">
           <div
             className="service-item"
-            onClick={() => history.push('/profile/feedback')}
+            onClick={() => history.push('/profile/back')}
           >
             <Icon type="iconbtn_feedback" />
             <div>用户反馈</div>

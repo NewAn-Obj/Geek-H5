@@ -12,7 +12,7 @@ import AuthRoute from '../../components/AuthRoute'
 // import Home from '../Home'
 const Video = React.lazy(() => import('../Video'))
 const Profile = React.lazy(() => import('../Profile'))
-const QA = React.lazy(() => import('../QA'))
+const QA = React.lazy(() => import('../QA/index'))
 const Home = React.lazy(() => import('../Home'))
 
 // 将 tab 按钮的数据放在一个数组中
@@ -21,7 +21,7 @@ const Home = React.lazy(() => import('../Home'))
 // - to 点击按钮后切换到的页面路径
 // - icon 按钮上显示的图标名称
 const buttons = [
-  { id: 1, title: '首页', to: '/home/index', icon: 'iconbtn_home' },
+  { id: 1, title: '首页', to: '/home', icon: 'iconbtn_home' },
   { id: 2, title: '问答', to: '/home/question', icon: 'iconbtn_qa' },
   { id: 3, title: '视频', to: '/home/video', icon: 'iconbtn_video' },
   { id: 4, title: '我的', to: '/home/profile', icon: 'iconbtn_mine' },
@@ -43,7 +43,7 @@ const Layout = () => {
       <div className="tab-content">
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
-            <Route path="/home/index" component={Home}></Route>
+            <Route exact path="/home" component={Home}></Route>
             <Route path="/home/question" component={QA}></Route>
             <Route path="/home/video" component={Video}></Route>
             <AuthRoute path="/home/profile" component={Profile}></AuthRoute>
