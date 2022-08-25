@@ -29,3 +29,18 @@ export const removeToken = () => {
 export const hasToken = () => {
   return !!getToken().token
 }
+/**
+ * 保存频道数据到本地
+ * @param {*} channels
+ */
+export const saveLocalChannels = (channels) => {
+  localStorage.setItem('USER_CHANNELS', JSON.stringify(channels))
+}
+
+export const getLocalChannels = () => {
+  return JSON.parse(localStorage.getItem('USER_CHANNELS'))
+}
+
+export const removeLocalChannels = () => {
+  localStorage.removeItem('USER_CHANNELS')
+}
