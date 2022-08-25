@@ -11,6 +11,12 @@ export const saveUserChannel = (payload) => {
     payload,
   }
 }
+export const saveAllChannel = (payload) => {
+  return {
+    type: 'save_allChannel',
+    payload,
+  }
+}
 
 export const getUserChannel = () => {
   return async (dispatch) => {
@@ -30,5 +36,13 @@ export const getUserChannel = () => {
         saveLocalChannels(res.data.channels)
       }
     }
+  }
+}
+
+export const getAllChannels = () => {
+  return async (dispatch) => {
+    const res = await request.get('/channels')
+    dispatch(saveAllChannel(res.data.channels))
+    console.log(res)
   }
 }
