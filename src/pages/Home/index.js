@@ -31,8 +31,14 @@ export default function Home() {
         onChange={(index) => setActiveID(index)}
       >
         {tabs.map((item) => {
-          console.log(item)
-          return <ArticleList key={item.id} channelId={item.id}></ArticleList>
+          // console.log(item)
+          return (
+            <ArticleList
+              key={item.id}
+              channelId={item.id}
+              checkedID={tabs[activeID].id}
+            ></ArticleList>
+          )
         })}
       </Tabs>
       <div className="tabs-opration">

@@ -1,6 +1,7 @@
 const initValue = {
   userChannels: [],
   allChannels: [],
+  articleList: {},
 }
 
 export default function reducer(state = initValue, action) {
@@ -15,6 +16,18 @@ export default function reducer(state = initValue, action) {
     return {
       ...state,
       allChannels: payload,
+    }
+  }
+  if (type === 'set_ArticleList') {
+    return {
+      ...state,
+      articleList: {
+        ...state.articleList,
+        [payload.channelId]: {
+          timestamp: payload.timestamp,
+          list: payload.list,
+        },
+      },
     }
   }
 
