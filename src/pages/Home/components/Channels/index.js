@@ -1,7 +1,9 @@
 import Icon from '../../../../components/Icon'
 import styles from './index.module.scss'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import classNames from 'classnames'
+import { useState } from 'react'
+import { delChannels } from '../../../../store/action/home'
 
 /**
  * 频道管理组件
@@ -27,8 +29,15 @@ const Channels = ({ index, onClose, onChange }) => {
   })
   // console.log(recommendChannels)
   const handleClick = (i) => {
+    if (editing) return
     onChange(i)
     onClose()
+  }
+  const dispatch = useDispatch()
+  const [editing, setEditing] = useState(false)
+  const deleteChannel = (item) => {
+    console.log(item, '删除频道')
+    dispatch(delChannels(item))
   }
   return (
     <div className={styles.root}>
@@ -40,11 +49,18 @@ const Channels = ({ index, onClose, onChange }) => {
       {/* 频道列表 */}
       <div className="channel-content">
         {/* 当前已选择的频道列表 */}
-        <div className="channel-item edit">
+        <div className={classNames('channel-item ', editing ? 'edit' : '')}>
           <div className="channel-item-header">
             <span className="channel-item-title">我的频道</span>
-            <span className="channel-item-title-extra">点击删除频道</span>
-            <span className="channel-item-edit">保存</span>
+            <span className="channel-item-title-extra">
+              点击{editing ? '删除' : '切换'}频道
+            </span>
+            <span
+              className="channel-item-edit"
+              onClick={() => setEditing(!editing)}
+            >
+              {editing ? '完成' : '编辑'}
+            </span>
           </div>
 
           <div className="channel-list">
@@ -59,7 +75,10 @@ const Channels = ({ index, onClose, onChange }) => {
                   onClick={() => handleClick(i)}
                 >
                   {item.name}
-                  <Icon type="iconbtn_tag_close" />
+                  <Icon
+                    type="iconbtn_tag_close"
+                    onClick={() => deleteChannel(item)}
+                  />
                 </span>
               )
             })}

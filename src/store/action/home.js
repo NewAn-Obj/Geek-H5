@@ -46,3 +46,28 @@ export const getAllChannels = () => {
     console.log(res)
   }
 }
+/**删除频道
+ * 如果客户登录了，就发请求删除token，删除redux中对应的token
+ * 如果客户没有登陆，就删除本地的token，删除redux中对应的token
+ * @param {*} channel
+ * @returns
+ */
+
+export const delChannels = (channel) => {
+  return async (dispatch, getState) => {
+    const oldChannlesList = getState().home.userChannels
+    if (hasToken()) {
+      await request.delete(`/user/channels/${channel.id}`)
+      dispatch(
+        saveUserChannel(
+          oldChannlesList.filter((item) => item.id !== channel.id)
+        )
+      )
+    } else {
+      //修改本地，修改redux
+      const result = oldChannlesList.filter((item) => item.id !== channel.id)
+      saveLocalChannels(result)
+      dispatch(saveUserChannel(result))
+    }
+  }
+}

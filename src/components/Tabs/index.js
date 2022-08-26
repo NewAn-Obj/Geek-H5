@@ -25,6 +25,7 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
     // TODO: 清理上一次的 animate
 
     const activeTab = navRef.current.children[activeIndex]
+    if (!activeTab) return
 
     const activeTabWidth = activeTab.offsetWidth || 60
     // 注意：第一次获取 offsetLeft 值为 0 ，以后每次获取为 8
