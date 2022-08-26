@@ -3,6 +3,7 @@ import ArticleItem from '../ArticleItem'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAricleList } from '../../../../store/action/home'
+import { PullToRefresh } from 'antd-mobile'
 
 /**
  * 文章列表组件
@@ -11,25 +12,31 @@ import { getAricleList } from '../../../../store/action/home'
  */
 const ArticleList = ({ channelId, checkedID }) => {
   const dispatch = useDispatch()
+  const current = useSelector((state) => state.home.articleList[channelId])
   useEffect(() => {
+    if (current) return
     if (channelId === checkedID) {
       dispatch(getAricleList(channelId, Date.now()))
     }
-  }, [checkedID, channelId, dispatch])
-  const current = useSelector((state) => state.home.articleList[channelId])
+  }, [checkedID, channelId, dispatch, current])
+  const onRefresh = async () => {
+    await dispatch(getAricleList(channelId, Date.now()))
+  }
   if (current === undefined) return null
   console.log(current)
   return (
     <div className={styles.root}>
       {/* 文章列表--{channelId} */}
       <div className="articles">
-        {current.list.map((item) => {
-          return (
-            <div className="article-item" key={item.art_id}>
-              <ArticleItem article={item}></ArticleItem>
-            </div>
-          )
-        })}
+        <PullToRefresh onRefresh={onRefresh}>
+          {current.list.map((item) => {
+            return (
+              <div className="article-item" key={item.art_id}>
+                <ArticleItem article={item}></ArticleItem>
+              </div>
+            )
+          })}
+        </PullToRefresh>
       </div>
     </div>
   )
