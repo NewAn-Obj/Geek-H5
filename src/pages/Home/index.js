@@ -6,6 +6,7 @@ import { getAllChannels, getUserChannel } from '../../store/action/home'
 import Icon from '../../components/Icon'
 import { Popup } from 'antd-mobile'
 import Channels from './components/Channels'
+import ArticleList from './components/ArticleList'
 export default function Home() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -18,18 +19,22 @@ export default function Home() {
   const onClose = () => {
     setVisible(false)
   }
-  const onChannelClick = (i) => {
-    setActiveID(i)
-  }
+
   //控制选中的频道高亮
   const [activeID, setActiveID] = useState(0)
+
   return (
     <div className={styles.root}>
       <Tabs
         tabs={tabs}
         index={activeID}
         onChange={(index) => setActiveID(index)}
-      ></Tabs>
+      >
+        {tabs.map((item) => {
+          console.log(item)
+          return <ArticleList key={item.id} channelId={item.id}></ArticleList>
+        })}
+      </Tabs>
       <div className="tabs-opration">
         <Icon type="iconbtn_search"></Icon>
         <Icon type="iconbtn_channel" onClick={() => setVisible(true)}></Icon>
@@ -46,7 +51,7 @@ export default function Home() {
           <Channels
             onClose={onClose}
             index={activeID}
-            onChange={(i) => onChannelClick(i)}
+            onChange={(i) => setActiveID(i)}
           ></Channels>
         </Popup>
       )}

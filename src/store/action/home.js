@@ -28,12 +28,13 @@ export const getUserChannel = () => {
       // channels
       //   ? dispatch(saveUserChannel(channels))
       //   : dispatch(saveUserChannel(await request.get('/user/channels')))
-      if (channels) {
+      if (channels === []) {
         dispatch(saveUserChannel(channels))
       } else {
         const res = await request.get('/user/channels')
         dispatch(saveUserChannel(res.data.channels))
         saveLocalChannels(res.data.channels)
+        // console.log('test')
       }
     }
   }
@@ -43,7 +44,7 @@ export const getAllChannels = () => {
   return async (dispatch) => {
     const res = await request.get('/channels')
     dispatch(saveAllChannel(res.data.channels))
-    console.log(res)
+    // console.log(res)
   }
 }
 /**删除频道
@@ -68,6 +69,22 @@ export const delChannels = (channel) => {
       const result = oldChannlesList.filter((item) => item.id !== channel.id)
       saveLocalChannels(result)
       dispatch(saveUserChannel(result))
+    }
+  }
+}
+
+export const addChannels = (channel) => {
+  return async (dispatch, getState) => {
+    const channels = [...getState().home.userChannels, channel]
+    console.log(getState())
+    if (hasToken()) {
+      await request.patch('/user/channels', {
+        channels: [channel],
+      })
+      dispatch(saveUserChannel(channels))
+    } else {
+      dispatch(saveUserChannel(channels))
+      saveLocalChannels(channels)
     }
   }
 }

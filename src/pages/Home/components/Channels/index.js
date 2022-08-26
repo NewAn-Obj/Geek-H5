@@ -3,7 +3,8 @@ import styles from './index.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
 import classNames from 'classnames'
 import { useState } from 'react'
-import { delChannels } from '../../../../store/action/home'
+import { addChannels, delChannels } from '../../../../store/action/home'
+import { Toast } from 'antd-mobile'
 
 /**
  * 频道管理组件
@@ -29,15 +30,43 @@ const Channels = ({ index, onClose, onChange }) => {
   })
   // console.log(recommendChannels)
   const handleClick = (i) => {
+    //如果是编辑状态，不允许跳转
     if (editing) return
+    console.log(i, index)
     onChange(i)
     onClose()
   }
   const dispatch = useDispatch()
   const [editing, setEditing] = useState(false)
-  const deleteChannel = (item) => {
-    console.log(item, '删除频道')
+  const deleteChannel = (item, i) => {
+    if (userChannels.length <= 4) {
+      Toast.show({
+        content: '至少要保留4个频道',
+      })
+      return
+    }
+    //高亮处理
+    //1.如果删除的 i与高亮的index相同，则默认让推荐高亮
+    //2.如果删除的 i在高亮的index之前，则让高亮的i-1
+    //3.如果删除的 i在高亮的index之后，则不做处理
+    // if (i < index) {
+    //   onChange(i - 1)
+    // } else if (i === index) {
+    //   onChange(0)
+    // } else {
+    //   onChange(i)
+    // }
+    // console.log(item, '删除频道---', 'i', i, 'index', index)
     dispatch(delChannels(item))
+  }
+  const addChannel = async (item) => {
+    // console.log(item)
+    await dispatch(addChannels(item))
+    Toast.show({
+      content: '添加成功',
+      duration: 500,
+      maskClickable: false,
+    })
   }
   return (
     <div className={styles.root}>
@@ -75,10 +104,15 @@ const Channels = ({ index, onClose, onChange }) => {
                   onClick={() => handleClick(i)}
                 >
                   {item.name}
-                  <Icon
-                    type="iconbtn_tag_close"
-                    onClick={() => deleteChannel(item)}
-                  />
+                  {
+                    //默认不删除推荐频道
+                    item.id !== 0 && (
+                      <Icon
+                        type="iconbtn_tag_close"
+                        onClick={() => deleteChannel(item, i)}
+                      />
+                    )
+                  }
                 </span>
               )
             })}
@@ -94,7 +128,11 @@ const Channels = ({ index, onClose, onChange }) => {
           <div className="channel-list">
             {recommendChannels.map((item) => {
               return (
-                <span key={item.id} className="channel-list-item">
+                <span
+                  key={item.id}
+                  className="channel-list-item"
+                  onClick={() => addChannel(item)}
+                >
                   + {item.name}
                 </span>
               )

@@ -8,11 +8,12 @@ import React from 'react'
 const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
   const navRef = useRef()
   const lineRef = useRef()
+
   const [activeIndex, setActiveIndex] = useState(index)
 
   const changeTab = (index) => {
     setActiveIndex(index)
-    onChange(index)
+    onChange && onChange(index)
   }
 
   // https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
@@ -25,7 +26,6 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
     // TODO: 清理上一次的 animate
 
     const activeTab = navRef.current.children[activeIndex]
-    if (!activeTab) return
 
     const activeTabWidth = activeTab.offsetWidth || 60
     // 注意：第一次获取 offsetLeft 值为 0 ，以后每次获取为 8
@@ -68,7 +68,7 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
               <div
                 className={classnames('tab', i === activeIndex ? 'active' : '')}
                 key={i}
-                onClick={() => changeTab(item.id)}
+                onClick={() => changeTab(i)}
               >
                 <span>{item.name}</span>
               </div>
@@ -78,10 +78,17 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
         </div>
 
         <div className="tabs-content">
-          {React.Children.map(children, (child) => {
-            return React.cloneElement(child, {
-              activeId: tabs[activeIndex]?.id || 0,
-            })
+          {React.Children.map(children, (child, index) => {
+            return (
+              <div
+                className="tabs-content-wrap"
+                style={{ display: index === activeIndex ? 'block' : 'none' }}
+              >
+                {React.cloneElement(child, {
+                  activeId: tabs[activeIndex]?.id || 0,
+                })}
+              </div>
+            )
           })}
         </div>
       </div>
@@ -91,7 +98,6 @@ const Tabs = ({ index = 0, tabs = [], children, onChange }) => {
 
 Tabs.propTypes = {
   tabs: PropTypes.array.isRequired,
-  children: PropTypes.arrayOf(PropTypes.element),
 }
 
 export default Tabs
