@@ -1,9 +1,9 @@
 import styles from './index.module.scss'
 import ArticleItem from '../ArticleItem'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAricleList } from '../../../../store/action/home'
-import { PullToRefresh } from 'antd-mobile'
+import { getArticleList, getMoreArticle } from '../../../../store/action/home'
+import { PullToRefresh, InfiniteScroll } from 'antd-mobile'
 
 /**
  * 文章列表组件
@@ -13,17 +13,32 @@ import { PullToRefresh } from 'antd-mobile'
 const ArticleList = ({ channelId, checkedID }) => {
   const dispatch = useDispatch()
   const current = useSelector((state) => state.home.articleList[channelId])
+  const [hasMore, setHasMore] = useState(true)
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     if (current) return
     if (channelId === checkedID) {
-      dispatch(getAricleList(channelId, Date.now()))
+      dispatch(getArticleList(channelId, Date.now()))
     }
   }, [checkedID, channelId, dispatch, current])
   const onRefresh = async () => {
-    await dispatch(getAricleList(channelId, Date.now()))
+    setHasMore(true)
+    await dispatch(getArticleList(channelId, Date.now()))
+  }
+  const loadMore = async () => {
+    if (loading) return
+    if (!current.timestamp) {
+      return setHasMore(false)
+    }
+    setLoading(true)
+    try {
+      await dispatch(getMoreArticle(channelId, current.timestamp))
+    } finally {
+      setLoading(false)
+    }
   }
   if (current === undefined) return null
-  console.log(current)
+  // console.log(current)
   return (
     <div className={styles.root}>
       {/* 文章列表--{channelId} */}
@@ -38,6 +53,7 @@ const ArticleList = ({ channelId, checkedID }) => {
           })}
         </PullToRefresh>
       </div>
+      <InfiniteScroll loadMore={loadMore} hasMore={hasMore}></InfiniteScroll>
     </div>
   )
 }

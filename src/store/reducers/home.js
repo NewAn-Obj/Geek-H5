@@ -30,6 +30,19 @@ export default function reducer(state = initValue, action) {
       },
     }
   }
+  if (type === 'set_MoreArticle') {
+    console.log(payload)
+    return {
+      ...state,
+      articleList: {
+        ...state.articleList,
+        [payload.channelId]: {
+          timestamp: payload.timestamp,
+          list: [...state.articleList[payload.channelId].list, ...payload.list],
+        },
+      },
+    }
+  }
 
   return state
 }

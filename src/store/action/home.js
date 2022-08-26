@@ -88,7 +88,7 @@ export const addChannels = (channel) => {
     }
   }
 }
-export const getAricleList = (channelId, timestamp) => {
+export const getArticleList = (channelId, timestamp) => {
   return async (dispatch) => {
     const res = await request({
       method: 'get',
@@ -107,10 +107,35 @@ export const getAricleList = (channelId, timestamp) => {
     )
   }
 }
+export const getMoreArticle = (channelId, timestamp) => {
+  return async (dispatch) => {
+    const res = await request({
+      method: 'get',
+      url: '/articles',
+      params: {
+        timestamp,
+        channel_id: channelId,
+      },
+    })
+    dispatch(
+      setMoreArticle({
+        channelId,
+        timestamp: res.data.pre_timestamp,
+        list: res.data.results,
+      })
+    )
+  }
+}
 
 export const setArticleList = (payload) => {
   return {
     type: 'set_ArticleList',
+    payload,
+  }
+}
+export const setMoreArticle = (payload) => {
+  return {
+    type: 'set_MoreArticle',
     payload,
   }
 }
