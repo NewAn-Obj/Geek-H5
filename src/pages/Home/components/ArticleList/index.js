@@ -37,6 +37,7 @@ const ArticleList = ({ channelId, checkedID }) => {
       setLoading(false)
     }
   }
+
   if (current === undefined) return null
   // console.log(current)
   return (

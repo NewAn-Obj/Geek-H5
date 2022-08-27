@@ -139,3 +139,17 @@ export const setMoreArticle = (payload) => {
     payload,
   }
 }
+
+export const setMoreAction = (payload) => {
+  return {
+    type: 'set_MoreAction',
+    payload,
+  }
+}
+
+export const dislikeArticle = (payload) => {
+  return {
+    type: 'set_dislikeArticle',
+    payload,
+  }
+}
