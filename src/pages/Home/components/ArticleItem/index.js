@@ -1,3 +1,5 @@
+import Img from '../../../../components/Img'
+
 //引入dayjs中文包
 import 'dayjs/locale/zh-cn'
 import classnames from 'classnames'
@@ -39,7 +41,7 @@ const ArticleItem = ({ className, article }) => {
           <div className="article-imgs">
             {images.map((item, i) => (
               <div className="article-img-wrapper" key={i}>
-                <img src={item} alt="" />
+                <Img src={item} alt="" />
               </div>
             ))}
           </div>
