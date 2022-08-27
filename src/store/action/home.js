@@ -153,3 +153,19 @@ export const dislikeArticle = (payload) => {
     payload,
   }
 }
+export const reportArticle = (payload) => {
+  return async (dispatch) => {
+    await request({
+      method: 'post',
+      url: '/article/reports',
+      data: {
+        target: payload.articleId,
+        type: payload.id,
+      },
+    })
+    dispatch({
+      type: 'set_reportArticle',
+      payload,
+    })
+  }
+}

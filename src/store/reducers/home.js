@@ -70,5 +70,21 @@ export default function reducer(state = initValue, action) {
       },
     }
   }
+  if (type === 'set_reportArticle') {
+    return {
+      ...state,
+      articleList: {
+        ...state.articleList,
+        [payload.channelId]: {
+          timestamp: state.articleList[payload.channelId].timestamp,
+          list: [
+            ...state.articleList[payload.channelId].list.filter((item) => {
+              return item.art_id !== payload.articleId
+            }),
+          ],
+        },
+      },
+    }
+  }
   return state
 }
